@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/d3-network-graph/static/css/main.af30dbe2.css",
+    "main.js": "/d3-network-graph/static/js/main.66736392.js",
+    "static/js/787.5afef5a4.chunk.js": "/d3-network-graph/static/js/787.5afef5a4.chunk.js",
+    "index.html": "/d3-network-graph/index.html",
+    "main.af30dbe2.css.map": "/d3-network-graph/static/css/main.af30dbe2.css.map",
+    "main.66736392.js.map": "/d3-network-graph/static/js/main.66736392.js.map",
+    "787.5afef5a4.chunk.js.map": "/d3-network-graph/static/js/787.5afef5a4.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.af30dbe2.css",
+    "static/js/main.66736392.js"
+  ]
+}
