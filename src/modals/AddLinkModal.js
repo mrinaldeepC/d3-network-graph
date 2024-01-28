@@ -52,10 +52,7 @@ const AddLinkModal = ({
     if (localStorage.getItem("nodes") !== null) {
       let nodes = JSON.parse(localStorage.getItem("nodes"));
       let sources = [{ id: "", label: "Select a source node" }];
-      setSourceDD(() => [
-        ...sources,
-        ...nodes.filter((node) => node.parent === undefined),
-      ]);
+      setSourceDD(() => [...sources, ...nodes.filter((node) => !node.hidden)]);
       let targets = [{ id: "", label: "Select a target node" }];
       setTargetDD(targets);
     }

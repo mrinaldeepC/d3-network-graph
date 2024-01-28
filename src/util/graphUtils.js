@@ -3,15 +3,24 @@ const updateLocalStorage = (nodes, links) => {
   if (links !== null) localStorage.setItem("links", JSON.stringify(links));
 };
 
-const addNode = (nodeName, origNodes, setOrigNodes) => {
+const addNode = (nodeName, selectedParent, origNodes, setOrigNodes) => {
   const nextId = origNodes[origNodes.length - 1].id + 1;
   let defaultName = "";
   if (nodeName === "") {
-    const ids = origNodes.map((node) => {
-      return node.parent === undefined && node.id;
-    });
-    defaultName = `Node ${Math.max(...ids) + 1}`;
+    if (selectedParent === "") {
+      const ids = origNodes.map((node) => {
+        return node.parent === undefined && node.id;
+      });
+      defaultName = `Node ${Math.max(...ids) + 1}`;
+    } else {
+      defaultName = `Node ${nextId}`;
+    }
   }
+  let parentObj = [
+    {
+      id: "",
+    },
+  ];
   let nodeObj = {
     id: nextId,
     label: nodeName !== "" ? nodeName : defaultName,
@@ -21,9 +30,32 @@ const addNode = (nodeName, origNodes, setOrigNodes) => {
     },
     hidden: false,
   };
+  let links = JSON.parse(localStorage.getItem("links"));
+  let modifiedLinks = [...links];
+  if (selectedParent !== "") {
+    parentObj[0].id = parseInt(selectedParent);
+    nodeObj.parent = parentObj;
+    let parentNode = origNodes.filter(
+      (node) => node.id === parseInt(selectedParent)
+    )[0];
+    nodeObj.hidden = parentNode.hidden;
+    let nextLinkId = 0;
+    if (links !== null) {
+      nextLinkId = links[links.length - 1].id + 1;
+    }
+    let link = {
+      source: parseInt(selectedParent),
+      target: nextId,
+      hidden: parentNode.hidden,
+      label: `Link ${nextLinkId}`,
+      id: nextLinkId,
+    };
+
+    modifiedLinks.push(link);
+  }
   let modifiedNodes = [...origNodes, nodeObj];
   setOrigNodes(modifiedNodes);
-  updateLocalStorage(modifiedNodes, null);
+  updateLocalStorage(modifiedNodes, modifiedLinks);
 };
 
 const getAllChildNodes = (data, nodeId, filteredList) => {
@@ -114,9 +146,10 @@ const toggleVisibility = (id, setOrigLinks, setOrigNodes, childHidden) => {
     childNodes.reduce((acc, obj) => ({ ...acc, [obj.id]: obj }), {})
   );
 
+  childNodes = childNodes.filter((node) => node.hidden !== childHidden);
+
   if (childNodes.length > 0) {
     let childNodeIds = new Set(childNodes.map((node) => node.id));
-    getAllLinksToNode(links, id, linkedEdges);
     let childNodesId = childNodeIds.entries();
     for (let id of childNodesId) {
       getAllLinksToNode(links, parseInt(id), linkedEdges);
@@ -126,107 +159,27 @@ const toggleVisibility = (id, setOrigLinks, setOrigNodes, childHidden) => {
       linkedEdges.reduce((acc, obj) => ({ ...acc, [obj.id]: obj }), {})
     );
 
-    let linkedNodes = new Set([
+    linkedEdges = linkedEdges.filter((edge) => edge.hidden === !childHidden);
+    let finalNodeIds = new Set(childNodes.map((node) => node.id));
+    let linkedNodesIds = new Set([
       ...linkedEdges.map((link) => link.source),
       ...linkedEdges.map((link) => link.target),
     ]);
 
-    //delete click node id
-    linkedNodes.delete(id);
+    // check if linkedNodes that is hidden except for the finalNodeIds
+    const filteredArray = Array.from(linkedNodesIds).filter(
+      (value) => !Array.from(finalNodeIds).includes(value)
+    );
 
-    nodes.forEach((element) => {
-      if (linkedNodes.has(element.id)) {
-        let elementId = parseInt(element.id);
-        //delete linked nodes that are parent
-
-        if (element.parent === undefined) {
-          linkedEdges = linkedEdges.filter(
-            (link) => link.source !== elementId && link.target !== elementId
-          );
-          linkedNodes.delete(element.id);
-        } else {
-          //if linked nodes has multiple parents
-          if (element.parent.length > 1) {
-            let parents = [];
-            for (let parent of element.parent) {
-              if (parent.id !== id) {
-                parents.push(nodes.filter((node) => node.id === parent.id)[0]);
-              }
-            }
-            let everyChildHidden = parents.every(
-              (node) => node.childHidden === childHidden
-            );
-            if (!everyChildHidden) {
-              for (let node of parents) {
-                linkedEdges = linkedEdges.filter(
-                  (link) => link.source !== node.id && link.target !== node.id
-                );
-                linkedNodes.delete(node.id);
-                let childParentNodes = [];
-                getAllChildNodes(nodes, node.id, childParentNodes);
-
-                childParentNodes = Object.values(
-                  childParentNodes.reduce(
-                    (acc, obj) => ({ ...acc, [obj.id]: obj }),
-                    {}
-                  )
-                );
-                if (childParentNodes.length > 0) {
-                  let ids = new Set(childParentNodes.map((node) => node.id));
-                  childNodes = childNodes.filter((node) => !ids.has(node.id));
-                  linkedEdges = linkedEdges.filter(
-                    (link) => !ids.has(link.source) && !ids.has(link.target)
-                  );
-                }
-              }
-            } else {
-              for (let node of parents) {
-                let childParentNodes = [];
-                getAllChildNodes(nodes, node.id, childParentNodes);
-                childParentNodes = Object.values(
-                  childParentNodes.reduce(
-                    (acc, obj) => ({ ...acc, [obj.id]: obj }),
-                    {}
-                  )
-                );
-
-                if (childParentNodes.length > 0) {
-                  childParentNodes.forEach((element) => {
-                    if (element.parent !== undefined) {
-                      let parents = element.parent;
-                      parents.filter(
-                        (item) => item.id !== id && item.id !== node.id
-                      );
-                      if (parents.length > 0) {
-                        console.table(parents);
-                        console.table(linkedEdges);
-                        console.table(childNodes);
-                        parents.forEach((item) => {
-                          linkedEdges.forEach((link) => {
-                            if (item === link.source || item === link.target) {
-                              link.hidden = childHidden;
-                            }
-                          });
-                          childNodes.forEach((node) => {
-                            if (item === node.id) {
-                              node.childHidden = childHidden;
-                            }
-                          });
-                        });
-                      }
-                    }
-                  });
-                }
-              }
-            }
-          }
-        }
+    filteredArray.forEach((element) => {
+      let node = nodes.filter((node) => node.id === element)[0];
+      if (node.hidden) {
+        linkedEdges = linkedEdges.filter(
+          (link) => link.source !== element && link.target !== element
+        );
       }
     });
 
-    childNodes = childNodes.filter((node) => node.hidden !== childHidden);
-    let finalNodeIds = new Set(childNodes.map((node) => node.id));
-    linkedEdges = linkedEdges.filter((link) => link.hidden !== childHidden);
     let finalLinkIds = new Set(linkedEdges.map((link) => link.id));
     nodes.forEach((node) => {
       if (finalNodeIds.has(node.id)) node.hidden = !node.hidden;
@@ -329,7 +282,7 @@ const getAvailableLinks = (id, links, nodes) => {
     ...currentLinks.map((link) => link.target),
   ]);
   let filteredNodes = nodes.filter(
-    (node) => !connectedIds.has(node.id) && node.parent === undefined
+    (node) => !connectedIds.has(node.id) && !node.hidden
   );
   return filteredNodes;
 };

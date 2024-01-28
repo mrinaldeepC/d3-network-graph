@@ -15,6 +15,7 @@ const DeleteLinkModal = ({
   const [linkDD, setLinkDD] = useState([]);
   const [linkId, setLinkId] = useState("");
   const onClose = () => {
+    setLinkId("");
     setDeleteModalOpen((prevState) => !prevState);
   };
 
@@ -22,6 +23,7 @@ const DeleteLinkModal = ({
     e.preventDefault();
     if (linkId === "") return;
     deleteLink(parseInt(linkId), setOrigLinks);
+    setLinkId("");
     setDeleteModalOpen((prevState) => !prevState);
   };
 

@@ -78,6 +78,7 @@ function App() {
         setAddModalOpen={setAddModalOpen}
         setOrigNodes={setOrigNodes}
         origNodes={origNodes}
+        setOrigLinks={setOrigLinks}
         key={"add_node"}
       />
 
