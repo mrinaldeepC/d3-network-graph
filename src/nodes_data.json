@@ -1,0 +1,106 @@
+[
+  {
+    "id": 1,
+    "label": "Node 1",
+    "color": "orange",
+    "hidden": false,
+    "childHidden": false
+  },
+  {
+    "id": 2,
+    "label": "Node 2",
+    "color": "DarkViolet",
+    "font": {
+      "color": "white"
+    },
+    "hidden": false,
+    "childHidden": false
+  },
+  {
+    "id": 3,
+    "label": "Node 3",
+    "color": "orange",
+    "hidden": false,
+    "childHidden": false
+  },
+  {
+    "id": 4,
+    "label": "Node 4",
+    "color": "DarkViolet",
+    "font": {
+      "color": "white"
+    },
+    "hidden": false,
+    "childHidden": false
+  },
+  {
+    "id": 5,
+    "label": "Node 5",
+    "color": "orange",
+    "hidden": false,
+    "childHidden": false
+  },
+  {
+    "id": 6,
+    "label": "child 2",
+    "color": "orange",
+    "parent": [
+      {
+        "id": 2
+      }
+    ],
+    "hidden": false,
+    "childHidden": false
+  },
+  {
+    "id": 7,
+    "label": "child 2.1",
+    "color": "lime",
+    "parent": [
+      {
+        "id": 6
+      }
+    ],
+    "hidden": false,
+    "childHidden": false
+  },
+  {
+    "id": 8,
+    "label": "child 5",
+    "color": "DarkViolet",
+    "font": {
+      "color": "white"
+    },
+    "parent": [
+      {
+        "id": 5
+      }
+    ],
+    "hidden": false,
+    "childHidden": false
+  },
+  {
+    "id": 9,
+    "label": "child 5.1",
+    "color": "orange",
+    "parent": [
+      {
+        "id": 5
+      }
+    ],
+    "hidden": false,
+    "childHidden": false
+  },
+  {
+    "id": 10,
+    "label": "child 4",
+    "color": "lime",
+    "parent": [
+      {
+        "id": 4
+      }
+    ],
+    "hidden": false,
+    "childHidden": false
+  }
+]

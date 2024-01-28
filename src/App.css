@@ -1,0 +1,92 @@
+svg {
+  background-color: #eee;
+  width: 100%;
+  overflow: visible;
+  display: block;
+  height: 500px;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  height: 100vh;
+  padding: 0 50px 150px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.addBtnWrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: end;
+  margin-bottom: 2rem;
+}
+
+.closeNodeModal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  content: "x";
+}
+
+form {
+  padding: 5px;
+  padding-left: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+input,
+select {
+  margin-bottom: 20px;
+  margin-top: 10px;
+  border: 1px solid #a7a7a7;
+  padding: 6px;
+  outline: none;
+  border-radius: 0.25rem;
+}
+
+button.link {
+  background: none !important;
+  border: none;
+  padding: 0 !important;
+  color: #00689d;
+  cursor: pointer;
+}
+
+button.link:hover {
+  color: #0089ce;
+}
+
+button.primary {
+  background: #00689d;
+  border: 1px solid #00689d;
+  color: white;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 0.25rem;
+  width: fit-content;
+}
+
+button.primary:hover {
+  background: #0089ce;
+  border: 1px solid #0089ce;
+}
+
+button.danger {
+  background: #bd0000;
+  border: 1px solid #bd0000;
+  color: white;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 0.25rem;
+  width: fit-content;
+}
+
+button.danger:hover {
+  background: #dd0000;
+  border: 1px solid #dd0000;
+}
